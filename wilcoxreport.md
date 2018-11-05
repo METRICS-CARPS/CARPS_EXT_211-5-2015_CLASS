@@ -118,6 +118,10 @@ View(BehavioralData_OSF)
 
 ```{r}
 
+# Name data "df" for ease of reference.
+
+df <- BehavioralData_OSF
+
 # 1. For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%). 
 
 aggregate(cbind(Accuracy) ~ VisualField, data=df, mean)
