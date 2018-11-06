@@ -6,34 +6,29 @@ output:
     toc_float: true
 ---
 
-[PILOT/COPILOT - TEXT IN SQUARE BRACKETS IS HERE FOR GUIDANCE. COPILOT PLEASE DELETE BEFORE KNITTING THE FINAL REPORT]
 
 # Report Details
 
-[PILOT/COPILOT ENTER RELEVANT REPORT DETAILS HERE]
 
 ```{r}
-articleID <- NA # insert the article ID code here e.g., "10-3-2015_PS"
-reportType <- NA # specify whether this is the 'pilot' report or 'final' report
-pilotNames <- NA # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
-copilotNames <- NA # # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
-pilotTTC <- NA # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
-copilotTTC <- NA # insert the co-pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
-pilotStartDate <- NA # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
-copilotStartDate <- NA # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
-completionDate <- NA # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+articleID <- "211-5-2015_CLASS"
+# insert the article ID code here e.g. "10-3-2015_PS"
+reportType <- "final" # specify whether this is the 'pilot' report or 'final' report
+pilotNames <- "John Wilcox" # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- "Kengthsagn Louis" # # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- "150" # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- "10" # insert the co-pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- "11/4/2018" # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- "11/4/2018" # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- "11/5/2018" # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 ```
 
 ------
 
 #### Methods summary: 
 
-[PILOT/COPILOT write a brief summary of the methods underlying the target outcomes written in your own words]
-
 In this study, the researchers aimed to determine the extent to which the brain's right hemisphere is  sensitive to syntactic aspects of language. To do this, they recruited 64
-right-handed university students to participate in their study. These participants these participants were shown 184 word pairs, half of which conformed to proper grammatical rules whereas the other half did not. The subject were asked to judge the grammaticality of the each phrase. The phrases were presented randomly to either the left visual field (LVF) or the right visual field (RVF) to ensure that phrases were presented in a lateralized manner to the subjects, and further measures were taken to ensure this lateralized presentation. Furtermore, EEGs were used to monitor brain and eye activity. This setup enabled to researchers to measure laterialized brain activity in response grammatically correct or incorrect word pairs.
-
-
+right-handed university students to participate in their study. These participants were shown 184 word pairs, half of which conformed to proper grammatical rules whereas the other half did not. The participants were asked to judge the grammaticality of the each phrase. The phrases were presented randomly to either the left visual field (LVF) or the right visual field (RVF) to ensure that phrases were presented in a lateralized manner to the subjects. Other measures were also taken to ensure a lateralized presentation of the phrases. EEGs were used to monitor brain and eye activity. This setup enabled to researchers to measure laterialized brain activity in response grammatically correct or incorrect word pairs.
 
 ------
 
@@ -54,11 +49,8 @@ Behavioral data.
 4. There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
 
 
-Note Make sure to use the original article for additional context and information about any necessary pre-processing steps. Also check for additional supplementary materials that may provide supporting documentation for analysis procedures. 
-
 ------
 
-[PILOT/COPILOT DO NOT CHANGE THE CODE IN THE CHUNK BELOW]  
 
 ```{r global_options, include=FALSE}
 # sets up some formatting options for the R Markdown document
@@ -67,7 +59,6 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 
 # Step 1: Load packages and prepare report object
 
-[PILOT/COPILOT Some useful packages are being loaded below. You can add any additional ones you might need too.]
 
 ```{r}
 # load packages
@@ -76,9 +67,11 @@ library(knitr) # for kable table formating
 library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
 library(readxl) # import excel files
 library(CARPSreports) # custom report functions
+library(ez) # for anova analysis
+library(readr) # easier to load data
 ```
 
-[PILOT/COPILOT DO NOT MAKE CHANGES TO THE CODE CHUNK BELOW]
+
 
 ```{r}
 # Prepare report object. This will be updated automatically by the reproCheck function each time values are compared
@@ -89,9 +82,9 @@ reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = 
 
 ```{r}
 
-library(readr)
+
 BehavioralData_OSF <- read_csv("data/BehavioralData_OSF.csv")
-View(BehavioralData_OSF)
+df <- BehavioralData_OSF #makes it easier to refer to data in code
 
 ```
 
@@ -99,37 +92,29 @@ View(BehavioralData_OSF)
 
 ```{r}
 
-
+# no data tidying required for this specific study
 
 ```
 
 # Step 4: Run analysis
 
-## Pre-processing
-
-[you can remove this section if no pre-processing is required]
-
-```{r}
-
-
-```
-
 ## Descriptive statistics
 
 ```{r}
 
-# Name data "df" for ease of reference.
-
-df <- BehavioralData_OSF
-
 # 1. For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%). 
+
+## Results were reproduced.
 
 aggregate(cbind(Accuracy) ~ VisualField, data=df, mean)
 
 
 # 2. The same pattern held regardless of familial sinistrality: for FS– participants, RVF accuracy was 80% and LVF accuracy was 73%; for FS+ participants, RVF accuracy was 82% and LVF accuracy was 77%. 
 
+## Results were reproduced.
+
 aggregate(cbind(Accuracy) ~ group + VisualField, data=df, mean)
+
 
 
 ```
@@ -138,27 +123,30 @@ aggregate(cbind(Accuracy) ~ group + VisualField, data=df, mean)
 
 ```{r}
 
-3. Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of 
 
-visual field, F (1, 62) = 37.39, p < .001, and 
+# 3. Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of  visual field, F (1, 62) = 37.39, p < .001, and  grammaticality, F (1, 62) = 18.51, p < .001, but no effect of familial sinistrality (p = .3). 
 
-grammaticality, F (1, 62) = 18.51, p < .001, but 
+## Results were reproduced.
+## visual field, F (1, 62) = 37.38543627 p = 7.125528e-08
+## grammaticality, F (1, 62) = 18.50922966 p = 6.106040e-05
+## no effect of familial sinistrality p = 2.712845e-01
+## (Note that "group" denotes familial sinistrality.)
 
-no effect of familial sinistrality (p = .3). 
+ezANOVA(data = df, dv = Accuracy, wid = Subject, within = .(VisualField, Grammaticality), between = group, type = 3)
 
 
 
-4. There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
+# 4. There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
 
+## Results were reproduced: Visual Field x Grammaticality interaction p = 8.442487e-01, and all p-values for familial sinistrality interactions were above .3. (See above.)
 
 
 ```
 
 # Step 5: Conclusion
 
-[Please include a text summary describing your findings. If this reproducibility check was a failure, you should note any suggestions as to what you think the likely cause(s) might be.]
-  
-[PILOT/COPILOT ENTER RELEVANT INFORMATION BELOW]
+All findings were reproduced without any detected errors. A minor point, though: it was not obvious to me what code could be used to reproduce their ANOVA statistics since the analysis requires an ANOVA involving both within and between subjects conditions for the same analysis. However, perhaps that just reflects nothing more than my lack of familiarity with producing ANOVAs in R.
+
 
 ```{r}
 Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
@@ -183,7 +171,7 @@ locus_unidentified_resolved <- NA # how many discrete issues were there for whic
 Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? TRUE, FALSE, or NA. This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
 ```
 
-[PILOT/COPILOT DOD NOT EDIT THE CODE CHUNK BELOW]
+
 
 ```{r}
 reportObject <- reportObject %>%
@@ -222,8 +210,6 @@ if(reportType == "final"){
 
 # Session information
 
-[This function will output information about the package versions used in this report:]
 
 ```{r session_info, include=TRUE, echo=TRUE, results='markup'}
 devtools::session_info()
-```
