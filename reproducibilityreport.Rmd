@@ -1,0 +1,215 @@
+---
+title: "CARPS Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+
+# Report Details
+
+
+```{r}
+articleID <- "211-5-2015_CLASS"
+# insert the article ID code here e.g. "10-3-2015_PS"
+reportType <- "final" # specify whether this is the 'pilot' report or 'final' report
+pilotNames <- "John Wilcox" # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- "Kengthsagn Louis" # # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- "150" # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- "10" # insert the co-pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- "11/4/2018" # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- "11/4/2018" # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- "11/5/2018" # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+```
+
+------
+
+#### Methods summary: 
+
+In this study, the researchers aimed to determine the extent to which the brain's right hemisphere is  sensitive to syntactic aspects of language. To do this, they recruited 64
+right-handed university students to participate in their study. These participants were shown 184 word pairs, half of which conformed to proper grammatical rules whereas the other half did not. The participants were asked to judge the grammaticality of the each phrase. The phrases were presented randomly to either the left visual field (LVF) or the right visual field (RVF) to ensure that phrases were presented in a lateralized manner to the subjects. Other measures were also taken to ensure a lateralized presentation of the phrases. EEGs were used to monitor brain and eye activity. This setup enabled to researchers to measure laterialized brain activity in response grammatically correct or incorrect word pairs.
+
+------
+
+#### Target outcomes: 
+
+For this article you should focus on the findings reported in the results section for behavioural data only.
+
+Specifically, you should attempt to reproduce all descriptive and inferential analyses reported in the text below and associated tables/figures:
+
+Behavioral data. 
+
+1. For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%). 
+
+2. The same pattern held regardless of familial sinistrality: for FS– participants, RVF accuracy was 80% and LVF accuracy was 73%; for FS+ participants, RVF accuracy was 82% and LVF accuracy was 77%. 
+
+3. Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of visual field, F (1, 62) = 37.39, p < .001, and grammaticality, F (1, 62) = 18.51, p < .001, but no effect of familial sinistrality (p = .3). 
+
+4. There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
+
+
+------
+
+
+```{r global_options, include=FALSE}
+# sets up some formatting options for the R Markdown document
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+# Step 1: Load packages and prepare report object
+
+
+```{r}
+# load packages
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CARPSreports) # custom report functions
+library(ez) # for anova analysis
+library(readr) # easier to load data
+```
+
+
+
+```{r}
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+```
+
+# Step 2: Load data
+
+```{r}
+
+
+BehavioralData_OSF <- read_csv("data/BehavioralData_OSF.csv")
+df <- BehavioralData_OSF #makes it easier to refer to data in code
+
+```
+
+# Step 3: Tidy data
+
+```{r}
+
+# no data tidying required for this specific study
+
+```
+
+# Step 4: Run analysis
+
+## Descriptive statistics
+
+```{r}
+
+# 1. For all participants as a group, accuracy was higher for RVF than for LVF words, although better-than-chance accuracy was seen in both visual fields (RVF: 81%; LVF: 75%). 
+
+## Results were reproduced.
+
+aggregate(cbind(Accuracy) ~ VisualField, data=df, mean)
+
+
+# 2. The same pattern held regardless of familial sinistrality: for FS– participants, RVF accuracy was 80% and LVF accuracy was 73%; for FS+ participants, RVF accuracy was 82% and LVF accuracy was 77%. 
+
+## Results were reproduced.
+
+aggregate(cbind(Accuracy) ~ group + VisualField, data=df, mean)
+
+
+
+```
+
+## Inferential statistics
+
+```{r}
+
+
+# 3. Results of the ANOVA with factors of familial sinistrality, visual field, and grammaticality showed main effects of  visual field, F (1, 62) = 37.39, p < .001, and  grammaticality, F (1, 62) = 18.51, p < .001, but no effect of familial sinistrality (p = .3). 
+
+## Results were reproduced.
+## visual field, F (1, 62) = 37.38543627 p = 7.125528e-08
+## grammaticality, F (1, 62) = 18.50922966 p = 6.106040e-05
+## no effect of familial sinistrality p = 2.712845e-01
+## (Note that "group" denotes familial sinistrality.)
+
+ezANOVA(data = df, dv = Accuracy, wid = Subject, within = .(VisualField, Grammaticality), between = group, type = 3)
+
+
+
+# 4. There was also no Visual Field × Grammaticality interaction (p = .8) or familial sinistrality interactions (ps > .3).
+
+## Results were reproduced: Visual Field x Grammaticality interaction p = 8.442487e-01, and all p-values for familial sinistrality interactions were above .3. (See above.)
+
+
+```
+
+# Step 5: Conclusion
+
+All findings were reproduced without any detected errors. A minor point, though: it was not obvious to me what code could be used to reproduce their ANOVA statistics since the analysis requires an ANOVA involving both within and between subjects conditions for the same analysis. However, perhaps that just reflects nothing more than my lack of familiarity with producing ANOVAs in R.
+
+
+```{r}
+Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+
+Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+
+# Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
+
+locus_typo <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+
+# How many of the above issues were resolved through author assistance?
+locus_typo_resolved <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification_resolved <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis_resolved <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data_resolved <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified_resolved <- NA # how many discrete issues were there for which you could not identify the cause
+
+Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? TRUE, FALSE, or NA. This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+```
+
+
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add variables to report 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome %in% c("MAJOR_ERROR", "DECISION_ERROR")) | Insufficient_Information_Errors > 0){
+  finalOutcome <- "Failure without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Failure despite author assistance"
+  }
+}else{
+  finalOutcome <- "Success without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Success with author assistance"
+  }
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, Author_Assistance, finalOutcome, Insufficient_Information_Errors, locus_typo, locus_specification, locus_analysis, locus_data, locus_unidentified, locus_typo_resolved, locus_specification_resolved, locus_analysis_resolved, locus_data_resolved, locus_unidentified_resolved)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "final"){
+  write_csv(reportObject, "finalReportDetailed.csv")
+  write_csv(reportExtras, "finalReportExtras.csv")
+}
+```
+
+# Session information
+
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()

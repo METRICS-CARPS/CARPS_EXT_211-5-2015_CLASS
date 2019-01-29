@@ -1,0 +1,2 @@
+articleID,pilotNames,copilotNames,pilotTTC,copilotTTC,pilotStartDate,copilotStartDate,completionDate,Author_Assistance,finalOutcome,Insufficient_Information_Errors,locus_typo,locus_specification,locus_analysis,locus_data,locus_unidentified,locus_typo_resolved,locus_specification_resolved,locus_analysis_resolved,locus_data_resolved,locus_unidentified_resolved
+211-5-2015_CLASS,John Wilcox,Kengthsagn Louis,150,10,11/4/2018,11/4/2018,11/5/2018,FALSE,Success without author assistance,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
